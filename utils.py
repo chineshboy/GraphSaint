@@ -7,6 +7,7 @@ import dgl
 import numpy as np
 import torch
 from sklearn.metrics import f1_score
+from ogb.nodeproppred import DglNodePropPredDataset
 
 
 class Logger(object):
@@ -53,6 +54,32 @@ def evaluate(model, g, labels, mask, multilabel=False):
         f1_mic, f1_mac = calc_f1(labels.cpu().numpy(),
                                  logits.cpu().numpy(), multilabel)
         return f1_mic, f1_mac
+
+def load_ogb(args, multilabel=True):
+    DataType = namedtuple('Dataset', ['num_classes', 'train_nid', 'g'])
+    dataset = DglNodePropPredDataset(name = args.dataset)
+
+    split_idx = dataset.get_idx_split()
+    train_idx, valid_idx, test_idx = split_idx["train"], split_idx["valid"], split_idx["test"]
+    g, label = dataset[0]
+    num_nodes = g.num_nodes()
+    mask = np.zeros((num_nodes,), dtype=bool)
+    train_mask = mask.copy()
+    train_mask[train_idx] = True
+    val_mask = mask.copy()
+    val_mask[valid_idx] = True
+    test_mask = mask.copy()
+    test_mask[test_idx] = True
+
+    class_arr = g.y  # a torch tensor of shape (num_nodes, num_tasks)
+
+    g.ndata['label'] = torch.tensor(class_arr, dtype=torch.float if multilabel else torch.long)
+    g.ndata['train_mask'] = torch.tensor(train_mask, dtype=torch.bool)
+    g.ndata['val_mask'] = torch.tensor(val_mask, dtype=torch.bool)
+    g.ndata['test_mask'] = torch.tensor(test_mask, dtype=torch.bool)
+
+    data = DataType(g=g, num_classes=num_classes, train_nid=train_nid)
+    return data
 
 
 # load data of GraphSAINT and convert them to the format of dgl

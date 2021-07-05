@@ -6,16 +6,17 @@ import torch
 import torch.nn.functional as F
 from sampler import SAINTNodeSampler, SAINTEdgeSampler, SAINTRandomWalkSampler
 from modules import GCNNet
-from utils import Logger, evaluate, save_log_dir, load_data
+from utils import Logger, evaluate, save_log_dir, load_data, load_ogb
 
 
 def main(args):
 
-    multilabel_data = set(['ppi', 'yelp', 'amazon'])
+    multilabel_data = set(['ppi', 'yelp', 'amazon', 'ogbn-papers100M'])
     multilabel = args.dataset in multilabel_data
 
     # load and preprocess dataset
-    data = load_data(args, multilabel)
+    #data = load_data(args, multilabel)
+    data = load_ogb(args, multilabel)
     g = data.g
     train_mask = g.ndata['train_mask']
     val_mask = g.ndata['val_mask']
@@ -150,7 +151,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='GraphSAINT')
     # data source params
-    parser.add_argument("--dataset", type=str, choices=['ppi', 'flickr', 'reddit', 'yelp', 'amazon'], default='ppi',
+    parser.add_argument("--dataset", type=str, choices=['ppi', 'flickr', 'reddit', 'yelp', 'amazon', 'ogbn-papers100M'], default='ppi',
                         help="Name of dataset.")
 
     # cuda params
