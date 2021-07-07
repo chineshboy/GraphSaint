@@ -57,7 +57,7 @@ def evaluate(model, g, labels, mask, multilabel=False):
 
 def load_ogb(args, multilabel=True):
     DataType = namedtuple('Dataset', ['num_classes', 'train_nid', 'g'])
-    dataset = DglNodePropPredDataset(name = args.dataset, root='./dgl')
+    dataset = DglNodePropPredDataset(name = args.dataset)
 
     split_idx = dataset.get_idx_split()
     train_idx, valid_idx, test_idx = split_idx["train"], split_idx["valid"], split_idx["test"]
