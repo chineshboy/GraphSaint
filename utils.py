@@ -72,6 +72,7 @@ def load_ogb(args, multilabel=True):
     test_mask[test_idx] = True
 
     class_arr = label  # a torch tensor of shape (num_nodes, num_tasks)
+    num_classes = 172
 
     g.ndata['label'] = torch.tensor(class_arr, dtype=torch.float if multilabel else torch.long)
     g.ndata['train_mask'] = torch.tensor(train_mask, dtype=torch.bool)
