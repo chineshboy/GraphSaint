@@ -57,7 +57,7 @@ def evaluate(model, g, labels, mask, multilabel=False):
 
 def load_ogb(args, multilabel=True):
     DataType = namedtuple('Dataset', ['num_classes', 'train_nid', 'g'])
-    dataset = DglNodePropPredDataset(name = args.dataset)
+    dataset = DglNodePropPredDataset(name = args.dataset, root='./dgl')
 
     split_idx = dataset.get_idx_split()
     train_idx, valid_idx, test_idx = split_idx["train"], split_idx["valid"], split_idx["test"]
@@ -71,7 +71,7 @@ def load_ogb(args, multilabel=True):
     test_mask = mask.copy()
     test_mask[test_idx] = True
 
-    class_arr = g.y  # a torch tensor of shape (num_nodes, num_tasks)
+    class_arr = label  # a torch tensor of shape (num_nodes, num_tasks)
 
     g.ndata['label'] = torch.tensor(class_arr, dtype=torch.float if multilabel else torch.long)
     g.ndata['train_mask'] = torch.tensor(train_mask, dtype=torch.bool)
