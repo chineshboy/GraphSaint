@@ -79,7 +79,7 @@ def load_ogb(args, multilabel=True):
     g.ndata['val_mask'] = torch.tensor(val_mask, dtype=torch.bool)
     g.ndata['test_mask'] = torch.tensor(test_mask, dtype=torch.bool)
 
-    data = DataType(g=g, num_classes=num_classes, train_nid=train_nid)
+    data = DataType(g=g, num_classes=num_classes, train_nid=train_idx)
     return data
 
 
