@@ -77,6 +77,8 @@ def load_ogb(args, multilabel=True):
     test_mask[test_idx] = True
 
     class_arr = label  # a torch tensor of shape (num_nodes, num_tasks)
+    if args.dataset == 'ogbn-mag':
+        class_arr = class_arr['paper']
     if args.dataset == 'ogbn-papers100M':
         num_classes = 172
     elif args.dataset == 'ogbn-mag':
