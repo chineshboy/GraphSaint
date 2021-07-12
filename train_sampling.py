@@ -94,7 +94,10 @@ def main(args):
 
     # set train_nids to cuda tensor
     if cuda:
-        train_nid = torch.from_numpy(train_nid).cuda()
+        if isinstance(train_nid, np.ndarray):
+            train_nid = torch.from_numpy(train_nid).cuda()
+        else:
+            train_nid = train_nid.cuda()
         print("GPU memory allocated before training(MB)",
               torch.cuda.memory_allocated(device=train_nid.device) / 1024 / 1024)
     start_time = time.time()
