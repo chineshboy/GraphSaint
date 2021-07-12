@@ -55,12 +55,17 @@ def evaluate(model, g, labels, mask, multilabel=False):
                                  logits.cpu().numpy(), multilabel)
         return f1_mic, f1_mac
 
+
 def load_ogb(args, multilabel=True):
     DataType = namedtuple('Dataset', ['num_classes', 'train_nid', 'g'])
     dataset = DglNodePropPredDataset(name = args.dataset)
 
     split_idx = dataset.get_idx_split()
     train_idx, valid_idx, test_idx = split_idx["train"], split_idx["valid"], split_idx["test"]
+    if args.dataset == 'ogbn-mag':
+        train_idx = train_idx['paper']
+        valid_idx = valid_idx['paper']
+        test_idx = test_idx['paper']
     g, label = dataset[0]
     num_nodes = g.num_nodes()
     mask = np.zeros((num_nodes,), dtype=bool)
@@ -72,7 +77,14 @@ def load_ogb(args, multilabel=True):
     test_mask[test_idx] = True
 
     class_arr = label  # a torch tensor of shape (num_nodes, num_tasks)
-    num_classes = 172
+    if args.dataset == 'ogbn-papers100M':
+        num_classes = 172
+    elif args.dataset == 'ogbn-mag':
+        num_classes = 349
+    elif args.dataset == 'ogbn-arxiv':
+        num_classes = 40
+    else:
+        num_classes = 1
 
     g.ndata['label'] = torch.tensor(class_arr, dtype=torch.float if multilabel else torch.long)
     g.ndata['train_mask'] = torch.tensor(train_mask, dtype=torch.bool)
