@@ -1,6 +1,6 @@
 import json
 import os
-from functools import namedtuple
+from collections import namedtuple
 import scipy.sparse
 from sklearn.preprocessing import StandardScaler
 import dgl
