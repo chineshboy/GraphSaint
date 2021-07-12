@@ -8,10 +8,11 @@ from sampler import SAINTNodeSampler, SAINTEdgeSampler, SAINTRandomWalkSampler
 from modules import GCNNet
 from utils import Logger, evaluate, save_log_dir, load_data, load_ogb
 
+ogbn_data = ['ogbn-arxiv', 'ogbn-mag', 'ogbn-papers100M']
+
 
 def main(args):
-
-    multilabel_data = set(['ppi', 'yelp', 'amazon', 'ogbn-papers100M'])
+    multilabel_data = set(['ppi', 'yelp', 'amazon'] + ogbn_data)
     multilabel = args.dataset in multilabel_data
 
     # load and preprocess dataset
@@ -151,8 +152,8 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='GraphSAINT')
     # data source params
-    parser.add_argument("--dataset", type=str, choices=['ppi', 'flickr', 'reddit', 'yelp', 'amazon', 'ogbn-papers100M'], default='ppi',
-                        help="Name of dataset.")
+    parser.add_argument("--dataset", type=str, choices=['ppi', 'flickr', 'reddit', 'yelp', 'amazon'] + ogbn_data,
+                        default='ppi', help="Name of dataset.")
 
     # cuda params
     parser.add_argument("--gpu", type=int, default=-1,
