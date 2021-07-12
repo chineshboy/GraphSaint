@@ -3,4 +3,3 @@ if [ $# -eq 1 ]; then
 else
   echo "please specify GPU id"
 fi
-
