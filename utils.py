@@ -84,7 +84,7 @@ def load_ogb(args, multilabel=True):
     elif args.dataset == 'ogbn-mag':
         num_classes = 349
     elif args.dataset == 'ogbn-arxiv':
-        num_classes = 40
+        num_classes = 1
     else:
         num_classes = 1
 
